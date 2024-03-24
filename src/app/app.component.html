@@ -20,14 +20,29 @@
     </div>
     <div class = "settings">
       <div class="settings-title">Settings</div>
-        <label for="sensitivitySlider">Sensitivity:</label>
+        <label for = "Style" name = "styleLabel">Sytles</label>
+        <select name ="Style"id = "Style" [(ngModel)]="Style">
+          <option value = "Classic">Classic</option>
+          <option value = "Minimal">Minimal</option>
+          <option value = "dotStar">Dot Star</option>
+        </select>
+        <label for="sensitivitySlider">Sensitivity</label>
         <input type="range" id="sensitivitySlider" name="sensitivitySlider" [(ngModel)]="sensitivity" min="0" max="1" step="0.01">
-      <button class="submit" (click)="submit()">Create</button>
+        
+        <label for="heightSlider">Height</label>
+        <input type="range" id="height" name="heightSlider" [(ngModel)]="height" min="0" max="500" step="10" value = "490">
+
+        <label for="widthSlider">Width</label>
+        <input type="range" id="width" name="widthSlider" [(ngModel)]="width" min="0" max="150" step="10" value="70">
+
+        <label for="inverse-title">inverse:</label>
+        <input type="checkbox" id="inverseBox" name="inverseBox" [(ngModel)]="inverse">
+      <button class="submit" (click)="submit()">generate</button>
     </div>
     <div class="ascii">
       <div class="ascii-title">Ascii</div>
       <div class="ascii-content">
-        <pre>{{ asciiArt }}</pre>
+        <pre class>{{ asciiArt }}</pre>
       </div>
     </div>
   </div>

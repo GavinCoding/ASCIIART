@@ -20,7 +20,11 @@ export class AppComponent {
   brightnessArray: string[][] = [];
   asciiArt: string = '';
   sensitivity: number = 0.1;
-  
+  inverse = false;
+  Style = "Classic";
+  height = 300;
+  width = 90;
+
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -57,33 +61,33 @@ export class AppComponent {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const targetWidth = 75; // Adjust as needed
-        const targetHeight = 40; // Adjust as needed
+        // const targetWidth = 90; // Adjust as needed
+        // const targetHeight = 150; // Adjust as needed
 
-        const imageAspectRatio = img.width / img.height;
-        const asciiAspectRatio = targetWidth / targetHeight;
+        // const imageAspectRatio = img.width / img.height;
+        // const asciiAspectRatio = targetWidth / targetHeight;
 
-        let scaleFactorWidth = targetWidth / img.width;
-        let scaleFactorHeight = targetHeight / img.height;
+        // let scaleFactorWidth = targetWidth / img.width;
+        // let scaleFactorHeight = targetHeight / img.height;
 
-        if (imageAspectRatio > asciiAspectRatio) {
-          // Original image is wider than ASCII art
-          scaleFactorHeight *= imageAspectRatio / asciiAspectRatio;
-        } else {
-          // Original image is taller than ASCII art
-          scaleFactorWidth *= asciiAspectRatio / imageAspectRatio;
-        }
+        // if (imageAspectRatio > asciiAspectRatio) {
+        //   // Original image is wider than ASCII art
+        //   scaleFactorHeight *= imageAspectRatio / asciiAspectRatio;
+        // } else {
+        //   // Original image is taller than ASCII art
+        //   scaleFactorWidth *= asciiAspectRatio / imageAspectRatio;
+        // }
 
-        const scaledWidth = img.width * scaleFactorWidth;
-        const scaledHeight = img.height * scaleFactorHeight;
+        // const scaledWidth = img.width * scaleFactorWidth;
+        // const scaledHeight = img.height * scaleFactorHeight;
 
-        canvas.width = scaledWidth;
-        canvas.height = scaledHeight;
+        canvas.width = this.width;
+        canvas.height = this.height;
 
         const ctx = canvas.getContext('2d');
         if (ctx) {
-          ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
-          const imageData = ctx.getImageData(0, 0, scaledWidth, scaledHeight);
+          ctx.drawImage(img, 0, 0, this.width, this.height);
+          const imageData = ctx.getImageData(0, 0, this.width, this.height);
           const brightnessArray = this.calculateBrightness(imageData);
           this.brightnessArray = this.mapBrightnessToCharacters(brightnessArray);
         }
@@ -115,10 +119,23 @@ export class AppComponent {
     return brightnessArray;
   }
   mapBrightnessToCharacters(brightnessArray: number[][]): string[][] {
-    const customCharacterSet = '$@B%#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,"^`\'.'; // Adjust as needed
+    const regularSet = '$@B%#*owmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,"^`\'.'; // Adjust as needed
+    const extremes = '-/|=\\'
+    const dotStar = ".*"
     const mappedArray: string[][] = [];
-    const step = 1 / customCharacterSet.length;
+  
+    let customCharacterSet = regularSet;
     
+    if(this.Style == "Minimal"){
+      customCharacterSet = extremes;
+    }else if(this.Style == "dotStar"){
+      customCharacterSet = dotStar;
+    }
+    if(this.inverse == true){
+      customCharacterSet = customCharacterSet.split("").reverse().join('');
+    }
+    const step = 1 / customCharacterSet.length;
+
     for (let i = 0; i < brightnessArray.length; i++) {
       const row = brightnessArray[i];
       const mappedRow: string[] = [];
